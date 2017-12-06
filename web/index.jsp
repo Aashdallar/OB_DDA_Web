@@ -14,22 +14,28 @@
     </head>
     <body><center>
         <h1>Bienvenido a MozoApp</h1>
+
+        <form method="get" action="login">
+            <table>
+                <thead>
+                    <tr><th colspan=2>Ingrese</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><label for="usu">Usuario: </label></td><td><input id="usu" type="text" name="usu"></input></td></tr>
+                    <tr><td><label for="pass">Clave: </label></td><td><input id="pass" type="text" name="pass"></input></td></tr>
+                </tbody>
+                <tfoot>
+                    <tr><th colspan=2><input type="submit" value="login"></input></th></tr>
+                </tfoot>
+            </table>
+
+        </form>
     </center>
-    <form method="get" action="login">
-        <table>
-            <tr>
-                <th>Usuario
-            </tr>
-        </table>
-        Usuario: <input type="text" name="nombre"></input><br><br>
-        Password: <input type="text" name="pass"></input><br><br>
-        <input type="submit" value="login"></input>
-    </form>
     <%
-        if(msg!=null){
+        if (msg != null) {
             out.println("Error:" + msg);
         }
     %>
-    </body>
+</body>
 </html>
 

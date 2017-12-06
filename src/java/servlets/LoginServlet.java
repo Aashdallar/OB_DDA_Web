@@ -16,22 +16,20 @@ import modelo.Usuario;
 import mozoApp.controlador.LoginControladorMozo;
 import mozoApp.controlador.LoginVistaMozo;
 import utils.Inicio;
+import vistas.VistaLoginWeb;
 
 /**
  *
  * @author alumnoFI
  */
 @WebServlet(name = "Login", urlPatterns = {"/login"})
-public class Login extends HttpServlet implements LoginVistaMozo {
-    
-    private LoginControladorMozo controlador;
+public class LoginServlet extends HttpServlet {
+
     private  HttpServletResponse response;
     private HttpServletRequest request;
 
-    public Login() {
-        Inicio.main(null);
-        controlador = new LoginControladorMozo(this);
-        
+    public LoginServlet() {
+        Inicio.main(null);        
     }
     
     
@@ -45,16 +43,12 @@ public class Login extends HttpServlet implements LoginVistaMozo {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+        protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-                        
-        String usr = request.getParameter("nombre");
-        String pass = request.getParameter("pass");
-        this.response=response;
-        this.request=request;
-        controlador.login(usr, pass);
         
         
+        VistaLoginWeb vista = new VistaLoginWeb();
+        vista.login(request,response);
                 
     }
 
@@ -97,22 +91,4 @@ public class Login extends HttpServlet implements LoginVistaMozo {
         return "Short description";
     }// </editor-fold>
 
-    @Override
-    public void error(String mensaje) {
-        try {
-            response.sendRedirect("index.jsp?msg=" +mensaje );
-        } catch (IOException ex) {
-            System.out.println("Error:" + ex.getMessage());
-        }
-    }
-
-    @Override
-    public void ingresar(Mozo mozo) {
-        try {
-            request.getSession(true).setAttribute("mozoLogueado", mozo);
-            response.sendRedirect("Agenda.jsp");
-        } catch (IOException ex) {
-           
-        }
-    }
 }
