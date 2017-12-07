@@ -8,8 +8,11 @@ package vistas;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import modelo.Item;
 import modelo.Mesa;
 import modelo.Mozo;
@@ -134,5 +137,12 @@ public class VistaMozoWeb implements MainVistaMozo {
     
     public void getProductos(HttpServletRequest request) {
         enviar("productos",Componentes.menuProductos("menuProductos",controlador.getProductosConStock()));
+    }
+
+    public void desloguear(HttpServletRequest request) {
+        if(controlador.desloguearMozo()){
+            enviar("inicio","");
+            request.getSession(true).setAttribute("mozoLogueado", null);
+        }
     }
 }

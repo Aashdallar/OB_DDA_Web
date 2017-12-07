@@ -29,31 +29,44 @@ public class Componentes {
     }
     
     public static String menuProductos(String id, ArrayList<Producto> productos) {
-        String menu = "<select id='" + id + "'>";
+        String menu = "<span>Producto: </span><select id='" + id + "'>";
         for (Producto prod : productos) {
             menu += "<option value='" + prod.getCodigo() + "'>" + prod.getNombre() + "</option>";
         }
         menu += "</select>";
+        if(productos.size()==0){
+            menu = "<span>No hay productos en stock</span>";
+        }
         return menu;
     }
     
     public static String menuMozos(String id, ArrayList<Mozo> mozos) {
-        String menu = "<select id='" + id + "'>";
+        String menu = "<span>Mozo Destino: </span><select id='" + id + "'>";
         int index = 0;
         for (Mozo mozo : mozos) {
             menu += "<option value='" + index + "'>" + mozo.getNombreCompleto() + "</option>";
             index++;
         }
         menu += "</select>";
+        if(mozos.size()==0){
+            menu = "<span>No hay mozos disponibles</span>";
+        }
         return menu;
     }
     
     public static String tablaItems(String id, ArrayList<Item> items) {
-        String tabla = "<table id="+id+"><thead><tr><th>Cantidad</th><th>Item</th><th>Precio</th></tr></thead><tbody>";
+        String tabla = "<table border=1 id="+id+"><thead><tr><th>Cantidad</th><th>Producto</th><th>Estado</th><th>Precio</th></tr></thead><tbody>";
         for (Item item : items) {
-            tabla += "<tr><td>"+item.getCantidad()+"</td><td>"+item.getProducto()+"</td><td>"+item.getMonto()+"</td></tr>";
+            String estado = item.getEstado().toString();
+            if(!item.getEstado().equals(Item.Estado.pendiente)){
+                estado += " ("+item.getPedido().getGestor().getNombreCompleto()+")";
+            }
+            tabla += "<tr><td>"+item.getCantidad()+"</td><td>"+item.getProducto()+" ($"+item.getPrecioUnitario()+") </td><td>"+estado+"</td><td>"+item.getMonto()+"</td></tr>";
         }
         tabla += "</tbody></table>";
+        if(items.size()==0){
+            tabla = "<h4>No hay items en este servicio.</h4>";
+        }
         return tabla;
     }
 
@@ -67,6 +80,9 @@ public class Componentes {
             }
             botones += "<div class='divBtnMesa'><a class='aBtnMesa " + clase + "' onClick='seleccionarMesa(" + x + ")'>" + m.toString() + "</a></div>";
             x++;
+        }
+        if(mesas.size()==0){
+            botones = "<h3>El mozo no tiene mesas.</h3>";
         }
         return botones;
     }

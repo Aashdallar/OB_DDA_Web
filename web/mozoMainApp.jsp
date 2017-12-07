@@ -22,16 +22,14 @@
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script type="text/javascript">
 
-            function mostrarModal(header,textoOpciones,contenidoHTML) {
+            function mostrarModal(header,contenidoHTML) {
                 document.getElementById("headerModal").innerHTML = header;
-                document.getElementById("textoOpciones").innerHTML = textoOpciones;
                 document.getElementById("contenidoModal").innerHTML = contenidoHTML;
                 document.getElementById("modal").style.display = "block";
             }
             function cerrarModal() {
                 document.getElementById("headerModal").innerHTML = "";
                 document.getElementById("contenidoModal").innerHTML = "";
-                document.getElementById("textoOpciones").innerHTML = "";
                 document.getElementById("opcionesModal").innerHTML = "";
                 document.getElementById("modal").style.display = "none";
             }
@@ -92,23 +90,26 @@
             vistaWeb.addEventListener("mozosDisponibles", function (evento) {
                 document.getElementById("opcionesModal").innerHTML = evento.data;
             }, false);
+            vistaWeb.addEventListener("inicio", function (evento) {
+                vistaWeb.close();
+                document.location = "/OB_DDA_Web/";
+            }, false);
 
             function seleccionarMesa(indexMesa) {
                 $.get("mozoApp?accion=seleccionarMesa&indexMesa=" + indexMesa, function (data) {});
             }
             function mostrarModalCliente() {
-                mostrarModal("Agregar Cliente","", "<tr><td>Ingrese ID</td><td><input type='text' id='idCliente' /></td></tr><tr><td colspan=2><a class='aBtn' onClick='agregarCliente()' >Agregar Cliente</a></td><td colspan=2><a class='aBtn' onClick='cerrarModal()' >Cancelar</a></td></tr>");
+                mostrarModal("Agregar Cliente","<tr><td>Ingrese ID</td><td><input type='text' id='idCliente' /></td></tr><tr><td colspan=2><a class='aBtn' onClick='agregarCliente()' >Agregar Cliente</a></td><td colspan=2><a class='aBtn' onClick='cerrarModal()' >Cancelar</a></td></tr>");
             }
             function mostrarModalItem() {
                 $.get("mozoApp?accion=getProductos", function (data) {
-                    mostrarModal("Agregar Item","Seleccione un Producto","<tr><td>Cantidad</td><td><input type='text' id='itemCantidad' /></td></tr><tr><td colspan=2>¿Alguna descripción o aclaración?</td></tr><tr><td colspan=2><textarea rows=5 id='itemDescripcion'></textarea></td></tr><tr><td><a class='aBtn' onClick='agregarItem()' >Agregar Item</a></td><td><a class='aBtn' onClick='cerrarModal()' >Cancelar</a></td></tr>");
+                    mostrarModal("Agregar Item","<tr><td colspan=2>Cantidad: <input type='text' id='itemCantidad' /></td></tr><tr><td colspan=2>¿Alguna descripción o aclaración?</td></tr><tr><td colspan=2><textarea rows=5 style='width:100%' id='itemDescripcion'></textarea></td></tr><tr><td><a class='aBtn' onClick='agregarItem()' >Agregar Item</a></td><td><a class='aBtn' onClick='cerrarModal()' >Cancelar</a></td></tr>");
                 });
             }
             function mostrarModalTransferirMesa() {
                 $.get("mozoApp?accion=iniciarTransferencia", function (data) {
-                    mostrarModal("Transferencia de Mesa","Seleccione Mozo Destino","<tr><td colspan=2><a class='aBtn' onClick='transferirMesa()' >Transferir</a></td><td colspan=2><a class='aBtn' onClick='cerrarModal()' >Cancelar</a></td></tr>");
-                });
-                
+                    mostrarModal("Transferencia de Mesa","<tr><td colspan=2><a class='aBtn' onClick='transferirMesa()' >Transferir</a></td><td colspan=2><a class='aBtn' onClick='cerrarModal()' >Cancelar</a></td></tr>");
+                });   
             }
             function abrirMesa() {
                 $.get("mozoApp?accion=abrirMesa", function (data) {});
@@ -137,11 +138,17 @@
                 $.get("mozoApp?accion=agregarCliente&id=" + id, function (data) {});
                 cerrarModal();
             }
+            function logout() {
+                if (confirm("¿Está seguro que desea salir de la sesión?")) {
+                    $.get("mozoApp?accion=logout", function (data) {});
+                }
+            }
 
         </script>
         <div class="container">
             <div class="item-a">
                 <h1>MOZO: <%= mozo.getNombreCompleto()%></h1>
+                <h3><a style="cursor: pointer" onClick="logout()">Logout</a></h3>
             </div>
             <div class="item-b" role="main">
                 <center>
