@@ -59,6 +59,8 @@ public class MozoMainServlet extends HttpServlet {
                 case "abrirMesa" : vista.abrirMesa(request); break;
                 case "cerrarMesa" : vista.cerrarMesa(request); break;
                 case "logout" : vista.desloguear(request); break;
+                case "aceptarTransferencia" : vista.aceptarTransferencia(); break;
+                case "rechazarTransferencia" : vista.rechazarTransferencia(); break;
             }
           
         }

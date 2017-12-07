@@ -30,6 +30,7 @@ public class VistaMozoWeb implements MainVistaMozo {
     private MainControladorMozo controlador;
     private AsyncContext contexto;
     private PrintWriter out;
+    private Transferencia trn;
 
     public VistaMozoWeb(Mozo mozo, AsyncContext c) {
         contexto = c;
@@ -93,17 +94,18 @@ public class VistaMozoWeb implements MainVistaMozo {
 
     @Override
     public void mostrarTransferenciaSolicitud(Transferencia transferencia) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        trn = transferencia;
+        enviar("solicitudTransferenciaMesa",Componentes.tablaDatosTransferenciaSolicitud(trn));
     }
 
     @Override
     public void mostrarTransferenciaActualizada() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        enviar("solicitudTransferenciaMesaActualizar",trn.getTiempoRestante() + "");
     }
 
     @Override
     public void terminarTransferenciaPorTiempoTerminado() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        enviar("solicitudTransferenciaMesaTerminada","");
     }
 
     public void agregarItem(HttpServletRequest request) {
@@ -144,5 +146,12 @@ public class VistaMozoWeb implements MainVistaMozo {
             enviar("inicio","");
             request.getSession(true).setAttribute("mozoLogueado", null);
         }
+    }
+    
+    public void aceptarTransferencia(){
+        controlador.transferenciaAceptar();
+    }
+    public void rechazarTransferencia(){
+        controlador.transferenciaRechazar();
     }
 }

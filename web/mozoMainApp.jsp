@@ -94,6 +94,15 @@
                 vistaWeb.close();
                 document.location = "/OB_DDA_Web/";
             }, false);
+            vistaWeb.addEventListener("solicitudTransferenciaMesa", function (evento) {
+                mostrarModal("Solicitud de Transferencia",evento.data);
+            }, false);
+            vistaWeb.addEventListener("solicitudTransferenciaMesaActualizar", function (evento) {
+               document.getElementById("tiempoRestante").innerHTML = evento.data;
+            }, false);
+            vistaWeb.addEventListener("solicitudTransferenciaMesaTerminada", function (evento) {
+               rechazarTransferencia();
+            }, false);
 
             function seleccionarMesa(indexMesa) {
                 $.get("mozoApp?accion=seleccionarMesa&indexMesa=" + indexMesa, function (data) {});
@@ -142,6 +151,14 @@
                 if (confirm("¿Está seguro que desea salir de la sesión?")) {
                     $.get("mozoApp?accion=logout", function (data) {});
                 }
+            }
+            function aceptarTransferencia(){
+                $.get("mozoApp?accion=aceptarTransferencia", function (data) {});
+                cerrarModal();
+            }
+            function rechazarTransferencia(){
+                $.get("mozoApp?accion=rechazarTransferencia", function (data) {});
+                cerrarModal();
             }
 
         </script>

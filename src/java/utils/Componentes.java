@@ -10,6 +10,7 @@ import modelo.Item;
 import modelo.Mesa;
 import modelo.Mozo;
 import modelo.Producto;
+import modelo.Transferencia;
 
 /**
  *
@@ -85,6 +86,19 @@ public class Componentes {
             botones = "<h3>El mozo no tiene mesas.</h3>";
         }
         return botones;
+    }
+    
+    public static String tablaDatosTransferenciaSolicitud(Transferencia trn){
+        String estado = trn.getMesa().estaAbierta() ? "Abierta" : "Cerrada";
+        
+        String str = "<tr><td>Mozo:</td><td>" + trn.getMesa().getMozo().getNombreCompleto() + "</td></tr>" +
+                "<tr><td>Mesa:</td><td>" + trn.getMesa().getNro() + "</td><tr>" +
+                "<tr><td>Estado:</td><td>" + estado + "</td></tr>" +
+                "<tr><td>Tiempo restante:</td><td id='tiempoRestante'>" + trn.getTiempoRestante() + "</td><tr>" + 
+                "<tr><td><a class='aBtn' onClick='aceptarTransferencia()'>Aceptar</a></td>" +
+                "<td><a class='aBtn' onClick='rechazarTransferencia()'>Rechazar</a></td></tr>";
+        
+        return str;
     }
 
 }
