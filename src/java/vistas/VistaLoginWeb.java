@@ -40,7 +40,6 @@ public class VistaLoginWeb implements LoginVistaMozo{
         try {
             request.getSession(true).setAttribute("mozoLogueado", mozo);
             response.sendRedirect("mozoMainApp.jsp");
-//            response.sendRedirect("mozoMainApp.html");
         } catch (IOException ex) {
            
         }

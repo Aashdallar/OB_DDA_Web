@@ -33,7 +33,7 @@ public class MozoMainServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Mozo mozo = (Mozo) request.getSession(true).getAttribute("mozoLogeado");
+        Mozo mozo = (Mozo) request.getSession(true).getAttribute("mozoLogueado");
         if(mozo==null){
             response.sendRedirect("/OB_DDA_Web/");
             return;
@@ -49,10 +49,16 @@ public class MozoMainServlet extends HttpServlet {
           request.getSession().setAttribute("vista", vista);
         }else{
            VistaMozoWeb vista = (VistaMozoWeb)request.getSession().getAttribute("vista");
-//            switch (accion){
-//                case "nuevoTel" : vista.nuevoTel(request); break;
-//                case "agregarContacto" : vista.agregarContacto(request);break;
-//            }
+            switch (accion){
+                case "seleccionarMesa" : vista.seleccionarMesa(request); break;
+                case "iniciarTransferencia" : vista.iniciarTransferencia(request); break;
+                case "agregarItem" : vista.agregarItem(request); break;
+                case "getProductos" : vista.getProductos(request); break;
+                case "agregarCliente" : vista.agregarCliente(request); break;
+                case "transferirMesa" : vista.transferirMesa(request); break;
+                case "abrirMesa" : vista.abrirMesa(request); break;
+                case "cerrarMesa" : vista.cerrarMesa(request); break;
+            }
           
         }
         

@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
+import modelo.Item;
 import modelo.Mesa;
 import modelo.Mozo;
 import modelo.Transferencia;
@@ -22,48 +23,69 @@ import utils.Componentes;
  * @author alumnoFI
  */
 public class VistaMozoWeb implements MainVistaMozo {
-    
+
     private MainControladorMozo controlador;
     private AsyncContext contexto;
     private PrintWriter out;
 
-    public VistaMozoWeb(Mozo mozo,AsyncContext c) {
+    public VistaMozoWeb(Mozo mozo, AsyncContext c) {
         contexto = c;
         try {
             out = contexto.getResponse().getWriter();
-            controlador = new MainControladorMozo(this,mozo);
+            controlador = new MainControladorMozo(this, mozo);
         } catch (IOException ex) {
             System.out.println("Error al obtener el writer");
         }
 
     }
-    
+
     //Comunicación SSE
     public void enviar(String evento, String dato) {
         out.write("event: " + evento + "\n");
         dato = dato.replace("\n", "");
         out.write("data: " + dato + "\n\n");
-        if (out.checkError()) { 
+        if (out.checkError()) {
             System.out.println("Error");
         } else {
-             System.out.println("Enviado");
+            System.out.println("Enviado");
         }
     }
-    
-    
+
+    public void seleccionarMesa(HttpServletRequest request) {
+        int indexMesa = Integer.parseInt(request.getParameter("indexMesa"));
+        controlador.seleccionarMesa(indexMesa);
+    }
+
     @Override
     public void mostrarMesas(Mesa mesa, Mozo mozo) {
-        enviar("mesas", Componentes.lista(false, "listaMesas", mozo.getMesas()));
+        enviar("mesas", Componentes.botonesMesas("btnMesas", mozo.getMesas()));
+        if (mesa != null) {
+            enviar("prepararMesa","");
+            if(mesa.estaAbierta()){
+                enviar("abierta","");
+            }else{
+                enviar("cerrada","");
+            }
+            enviar("items", Componentes.tablaItems("tablaItems",mesa.getServicio().getItems()));
+            enviar("nroMesa", mesa.getNro() + "");
+            enviar("total", mesa.getServicio().getMontoTotalAAbonar() + "");
+            enviar("descuento", mesa.getServicio().getMontoDescontado() + "");
+            enviar("totalSinBeneficio", mesa.getServicio().getMontoTotalSinDescuento() + "");
+            enviar("cliente", mesa.getClienteNombre());
+            enviar("beneficio", mesa.getClienteBeneficioTexto());
+        } else {
+            enviar("limpiarMesa","");
+        }
     }
 
     @Override
     public void mostrarAlerta(String mensaje) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        enviar("mensaje",mensaje);
     }
 
     @Override
     public void mostrarTransferirMesa(ArrayList<Mozo> mozosLogueados, Mesa mesa) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        enviar("mozosDisponibles",Componentes.menuMozos("menuMozos",mozosLogueados));
     }
 
     @Override
@@ -80,53 +102,37 @@ public class VistaMozoWeb implements MainVistaMozo {
     public void terminarTransferenciaPorTiempoTerminado() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public void agregarItem(HttpServletRequest request) {
+        int cantidad = Integer.parseInt(request.getParameter("cantidad"));
+        int prod = Integer.parseInt(request.getParameter("indexProd"));
+        String descripcion = request.getParameter("descripcion");
+        controlador.agregarItemALaMesa(prod,cantidad,descripcion);    
+    }
     
-//    @Override
-//    public void mostrarContactos(ArrayList<Contacto> contactos) {
-//        enviar("contactos",Componentes.lista(true, "lstContactos", contactos));
-//    }
-//
-//    @Override
-//    public void mostrarTitulo(String nombreCompleto, int cantidadContactos) {
-//        enviar("titulo", nombreCompleto + " - (" + cantidadContactos + ") contactos");
-//    }
-//
-//    @Override
-//    public void error(String message) {
-//       enviar("mensaje", message);
-//    }
-//
-//    @Override
-//    public void mostrarTelefonos(ArrayList<Telefono> telefonos) {
-//       enviar("telefonos",Componentes.lista(true,"lstTelefonos", telefonos));
-//    }
-//
-//    @Override
-//    public void limpiarCamposTelefono() {
-//     enviar("limpiarCamposTelefono","");
-//    }
-//
-//    @Override
-//    public void limpiarCamposContacto() {
-//        enviar("limpiarCamposContacto","");
-//    }
-//
-//    @Override
-//    public void cargarTipos(ArrayList<Tipo> tipos) {
-//       this.tipos = tipos;
-//       enviar("tipos",Componentes.lista(false, "lstTipos", tipos));
-//    }
-//
-//    public void nuevoTel(HttpServletRequest request) {
-//        
-//        String nro = request.getParameter("numero");
-//        int idx = Integer.parseInt(request.getParameter("tipo"));
-//        controlador.agregarTelefono(nro, tipos.get(idx));
-//    }
-//
-//    public void agregarContacto(HttpServletRequest request) {
-//        String nombre = request.getParameter("nombre");
-//        controlador.crearContacto(nombre);
-//    }
+    public void agregarCliente(HttpServletRequest request) {
+        int idCli = Integer.parseInt(request.getParameter("id"));
+        controlador.agregarClienteALaMesa(idCli);
+    }
+
+    public void transferirMesa(HttpServletRequest request) {
+        int indexMozo = Integer.parseInt(request.getParameter("indexMozo"));
+            controlador.transferirMesa(indexMozo);
+    }
+
+    public void abrirMesa(HttpServletRequest request) {
+        controlador.abrirMesa();
+    }
+
+    public void cerrarMesa(HttpServletRequest request) {
+        controlador.cerrarMesa();
+    }
+
+    public void iniciarTransferencia(HttpServletRequest request) {
+        controlador.iniciarTransferirMesa();
+    }
     
+    public void getProductos(HttpServletRequest request) {
+        enviar("productos",Componentes.menuProductos("menuProductos",controlador.getProductosConStock()));
+    }
 }

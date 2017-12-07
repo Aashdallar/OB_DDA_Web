@@ -18,7 +18,7 @@
         <form method="get" action="login">
             <table>
                 <thead>
-                    <tr><th colspan=2>Ingrese</th></tr>
+                    <tr><th colspan=2>Ingrese usuario y clave</th></tr>
                 </thead>
                 <tbody>
                     <tr><td><label for="usu">Usuario: </label></td><td><input id="usu" type="text" name="usu"></input></td></tr>
@@ -30,12 +30,12 @@
             </table>
 
         </form>
+        <%
+            if (msg != null) {
+                out.println("Error:" + msg);
+            }
+        %>
     </center>
-    <%
-        if (msg != null) {
-            out.println("Error:" + msg);
-        }
-    %>
 </body>
 </html>
 
